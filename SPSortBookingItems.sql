@@ -30,12 +30,16 @@ BEGIN
 		PRINT @BookingHours;
 		IF NOT EXISTS ( SELECT * FROM @t WHERE DayDate BETWEEN DATEADD(MINUTE, 1, @DayDate) AND DATEADD(MINUTE, @BookingHours*60-1, @DayDate))
 		BEGIN 
-			PRINT 'This is book at';
+			PRINT 'This is book';
 			PRINT DATEADD(MINUTE, @BookingHours*60, @DayDate)
 			
 			UPDATE @t SET IsPlaces=1, DayDate=DATEADD(MINUTE, @BookingHours*60, @DayDate) WHERE RecordID = @RecordID;
 			
 			FETCH NEXT FROM Cs INTO @RecordID, @DayDate, @BookingHours, @IsPlaces
+		END
+		ELSE
+		BEGIN
+			PRINT 'NO-booking room';
 		END
 		PRINT 'LOOP-END';
 	END
